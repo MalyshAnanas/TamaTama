@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(){
-	font.loadFromFile("ArialRegular.ttf");// Подгружаем шрифт для отрисовки элементов
+	font.loadFromFile("content/ArialRegular.ttf");// Подгружаем шрифт для отрисовки элементов
 	Init();
 }
 

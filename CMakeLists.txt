@@ -7,12 +7,13 @@ add_definitions(-DSFML_STATIC)
 
 include_directories("ext/SFML/include/")
 include_directories("inc/")
+include_directories("content/")
 link_directories("ext/SFML/lib/")
 
 add_executable(project TamaTama.cpp
 			Game.cpp
 			Game.h
-
+			Pet.hpp
 )
 
 target_link_libraries("project"
@@ -34,7 +35,5 @@ target_link_libraries("project"
         vorbisfile
         vorbis
         ogg)
-file(COPY ArialRegular.ttf DESTINATION /)
-file(COPY "Room1.png" DESTINATION "/")
-file(COPY "Room2.png" DESTINATION "/")
-file(COPY "Gus.png" DESTINATION "/")
+
+file(COPY "content" DESTINATION "/")
