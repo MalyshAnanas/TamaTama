@@ -6,6 +6,12 @@
 #include "Game.cpp"
 
 int main(){
+
+    int sleep = 100;
+    int hunger = 100;
+    int hygiene = 100;
+    int leisure = 100;
+
     std::string line;
     std::ifstream in("TamaTama.txt", std::ios::app);
     std::ofstream out("TamaTama.txt", std::ios::app);
@@ -20,6 +26,11 @@ int main(){
                 std::string Line1;
                 std::cin >> Line1;
                 out << Line1;
+
+                sleep = 100;
+                hunger = 100;
+                hygiene = 100;
+                leisure = 100;
             }
             out.close();
         }
@@ -30,22 +41,23 @@ int main(){
     sf::Event event;
 
     sf::Texture texture;
+    sf::Texture Tam;
+    sf::Sprite Gus;
     sf::Sprite room;
     texture.loadFromFile("Room1.png");
+    Tam.loadFromFile("Gus.png");
     room.setTexture(texture);
     room.setTextureRect(sf::IntRect(0, 0, 540, 720));
     room.setPosition(0, 0);
-    sf::Clock clock;
+    Gus.setTexture(Tam);
+    Gus.setTextureRect(sf::IntRect(0, 0, 256, 350));
+    Gus.setPosition(155, 185);
     float frame = 0;
     bool flagGame = false;
 
     while (window.isOpen()){
         while (window.pollEvent(event)){
             if (event.type == sf::Event::Closed) window.close();
-
-            float time = clock.getElapsedTime().asMicroseconds();
-            clock.restart();
-            time = time / 800;
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
                 if (frame != 0) {
@@ -112,6 +124,7 @@ int main(){
         }
         window.clear();
         window.draw(room);
+        window.draw(Gus);
         window.display();
         
     }
