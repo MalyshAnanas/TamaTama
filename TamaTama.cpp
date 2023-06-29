@@ -41,7 +41,6 @@ int main(){
     std::cin >> Type;
     Tam Pet(Line1, Type); //Создание объекта Тамы
 
-    std::cout << sf::VideoMode::getDesktopMode().width << " " << sf::VideoMode::getDesktopMode().height;
     sf::RenderWindow window(sf::VideoMode(540, 720), "TamaTama");
     window.setFramerateLimit(60);
     sf::Event event;
@@ -52,13 +51,20 @@ int main(){
 
     sf::Texture texture;
     sf::Sprite room;
-    texture.loadFromFile("content/Room1.png");
+    texture.loadFromFile("content/Room.png");
     room.setTexture(texture);
     room.setTextureRect(sf::IntRect(0, 0, 540, 720));
     room.setPosition(0, 0);
+    sf::Texture TextureOfTable;
+    sf::Sprite Table;
+    TextureOfTable.loadFromFile("content/Table.png");
+    Table.setTexture(TextureOfTable);
+    Table.setTextureRect(sf::IntRect(0, 0, 540, 720));
+    Table.setPosition(11, 382);
     sf::Clock clock;
     float frame = 0;
     bool flagGame = false;
+    bool IsThatDay = true;
     
     while (window.isOpen()){
         while (window.pollEvent(event)){
@@ -68,19 +74,18 @@ int main(){
             clock.restart();
             time = time / 800;
 
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x > 7 && event.mouseButton.x < 99 && event.mouseButton.y>12 && event.mouseButton.y<101) {
                 if (frame != 0) {
                     frame -= 1;
-                    room.setTextureRect(sf::IntRect(540 * int(frame), 0, 540, 720));
+                    room.setTextureRect(sf::IntRect(540 * int(frame), 0, 540, 720)); 
                 }
             }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x > 440 && event.mouseButton.x < 532 && event.mouseButton.y>12 && event.mouseButton.y < 101) {
                 if (frame != 3) {
                     frame += 1;
                     room.setTextureRect(sf::IntRect(540 * int(frame), 0, 540, 720));
                 }
             }
-
             if (frame == 3) { flagGame = true; }
             else { flagGame = false; }
 
@@ -130,10 +135,28 @@ int main(){
 
                 }
             }
+            
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (frame == 0 && event.mouseButton.x > 0 && event.mouseButton.x < 126 && event.mouseButton.y>298 && event.mouseButton.y < 497)
+                {
+                    if (event.mouseButton.button == sf::Mouse::Left)
+                    {
+                        if (IsThatDay == true)
+                        {
+                            room.setTextureRect(sf::IntRect(0, 720, 540, 720));
+                            IsThatDay = false;
+                        }
+                        else { room.setTextureRect(sf::IntRect(0, 0, 540, 720)); IsThatDay = true; }
+                    }
+                }
+            }
+           
         }
         window.clear();
         window.draw(room);
         window.draw(Pet.TamaSprite());
+        if (frame == 1) { window.draw(Table); }
         window.display();
         
     }

@@ -21,12 +21,12 @@ public:
 		if (NumberOfType == 1)
 		{
 			TypeOfTam = TypeOfPet::RACOON;
-			TextureTam.loadFromFile("content/Rac.png");
+			TextureTam.loadFromFile("content/Racoon.png");
 		}
 		else if (NumberOfType == 2)
 		{
 			TypeOfTam = TypeOfPet::GOOSE;
-			TextureTam.loadFromFile("content/Gus.png");
+			TextureTam.loadFromFile("content/Goose.png");
 		}
 		SpriteTam.setTexture(TextureTam);
 		SpriteTam.setTextureRect(sf::IntRect(0, 0, 256, 350));
