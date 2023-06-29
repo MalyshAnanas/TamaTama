@@ -9,7 +9,11 @@ include_directories("ext/SFML/include/")
 include_directories("inc/")
 link_directories("ext/SFML/lib/")
 
-add_executable(project TamaTama.cpp)
+add_executable(project TamaTama.cpp
+			Game.cpp
+			Game.h
+
+)
 
 target_link_libraries("project"
 #        sfml-graphics-s
