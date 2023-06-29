@@ -6,6 +6,11 @@
 #include "Pet.hpp"
 
 int main(){
+    int sleep = 100;
+    int hunger = 100;
+    int hygiene = 100;
+    int leisure = 100;
+
     std::string line;
     std::ifstream in("content/TamaTama.txt", std::ios::app);
     std::ofstream out("content/TamaTama.txt", std::ios::app);
@@ -20,6 +25,11 @@ int main(){
                 std::cout << "Write Tama`s name:" << std::endl;
                 std::cin >> Line1;
                 out << Line1;
+
+                sleep = 100;
+                hunger = 100;
+                hygiene = 100;
+                leisure = 100;
             }
             out.close();
         }
