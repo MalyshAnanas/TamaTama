@@ -10,6 +10,8 @@ int main(){
     int hunger = 100;
     int hygiene = 100;
     int leisure = 100;
+    sf::Clock clock;
+    int count = 0;
 
     std::string line;
     std::ifstream in("content/TamaTama.txt", std::ios::app);
@@ -25,11 +27,6 @@ int main(){
                 std::cout << "Write Tama`s name:" << std::endl;
                 std::cin >> Line1;
                 out << Line1;
-
-                sleep = 100;
-                hunger = 100;
-                hygiene = 100;
-                leisure = 100;
             }
             out.close();
         }
@@ -61,23 +58,40 @@ int main(){
     Table.setTexture(TextureOfTable);
     Table.setTextureRect(sf::IntRect(0, 0, 540, 720));
     Table.setPosition(11, 382);
-    sf::Clock clock;
     float frame = 0;
     bool flagGame = false;
     bool IsThatDay = true;
-    
+
+    sf::Font fOnt;
+    fOnt.loadFromFile("content/ArialRegular.ttf");
+    sf::Text text("", fOnt, 30);
+    text.setColor(sf::Color::Red);
+    int cnt = 0;
+
     while (window.isOpen()){
-        while (window.pollEvent(event)){
+
+        long time = clock.getElapsedTime().asSeconds();
+        if (time % 1 == 0 && count!=time) {
+            count = time;
+            sleep -= 1;
+            hunger -= 1;
+            hygiene -= 1;
+            leisure -= 1;
+            //std::cout << "requirement:" << sleep << std::endl << hunger << std::endl << hygiene << std::endl << leisure << std::endl;
+        }
+        if (sleep <= 0 && hunger <= 0 && hygiene <= 0 && leisure <= 0) {
+            text.setString("Tama got offended and left you.");
+            text.setPosition(50, 360);
+            cnt += 1;
+            if(cnt==300){ window.close(); }
+        }
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
 
-            float time = clock.getElapsedTime().asMicroseconds();
-            clock.restart();
-            time = time / 800;
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x > 7 && event.mouseButton.x < 99 && event.mouseButton.y>12 && event.mouseButton.y<101) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x > 7 && event.mouseButton.x < 99 && event.mouseButton.y>12 && event.mouseButton.y < 101) {
                 if (frame != 0) {
                     frame -= 1;
-                    room.setTextureRect(sf::IntRect(540 * int(frame), 0, 540, 720)); 
+                    room.setTextureRect(sf::IntRect(540 * int(frame), 0, 540, 720));
                 }
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && event.mouseButton.x > 440 && event.mouseButton.x < 532 && event.mouseButton.y>12 && event.mouseButton.y < 101) {
@@ -88,54 +102,55 @@ int main(){
             }
             if (frame == 3) { flagGame = true; }
             else { flagGame = false; }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (frame == 3 && event.mouseButton.x > 0 && event.mouseButton.x < 151 && event.mouseButton.y>360 && event.mouseButton.y < 521) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                            ////////////
+                            sf::Font font;
+                            font.loadFromFile("content/ArialRegular.ttf");
+                            sf::RenderWindow window(sf::VideoMode(1000, 1000), "Game");
+                            // Создаем объект игры
+                            Game game;
+                            game.setPosition(50.f, 50.f);
+                            sf::Event event;
+                            int move_counter = 0;	// Счетчик случайных ходов для перемешивания головоломки
 
-            if (event.type == sf::Event::KeyPressed){
-                if (event.key.code == sf::Keyboard::Escape) { window.close(); }
-                if ((event.key.code == sf::Keyboard::G) && (flagGame==true)) {
-                    ////////////
-                    sf::Font font;
-                    font.loadFromFile("content/ArialRegular.ttf");
-                    sf::RenderWindow window(sf::VideoMode(1000, 1000), "Game");
-                    // Создаем объект игры
-                    Game game;
-                    game.setPosition(50.f, 50.f);
-                    sf::Event event;
-                    int move_counter = 0;	// Счетчик случайных ходов для перемешивания головоломки
-
-                    while (window.isOpen())
-                    {
-                        while (window.pollEvent(event))
-                        {
-                            if (event.type == sf::Event::Closed) window.close();
-                            if (event.type == sf::Event::KeyPressed)
+                            while (window.isOpen())
                             {
-                                // Получаем нажатую клавишу - выполняем соответствующее действие
-                                if (event.key.code == sf::Keyboard::Escape) window.close();
-                                if (event.key.code == sf::Keyboard::Left) game.Move(Direction::Left);
-                                if (event.key.code == sf::Keyboard::Right) game.Move(Direction::Right);
-                                if (event.key.code == sf::Keyboard::Up) game.Move(Direction::Up);
-                                if (event.key.code == sf::Keyboard::Down) game.Move(Direction::Down);
-                                // Новая игра
-                                if (event.key.code == sf::Keyboard::F2)
+                                while (window.pollEvent(event))
                                 {
-                                    game.Init();
-                                    move_counter = 100;
+                                    if (event.type == sf::Event::Closed) window.close();
+                                    if (event.type == sf::Event::KeyPressed)
+                                    {
+                                        // Получаем нажатую клавишу - выполняем соответствующее действие
+                                        if (event.key.code == sf::Keyboard::Escape) window.close();
+                                        if (event.key.code == sf::Keyboard::Left) game.Move(Direction::Left);
+                                        if (event.key.code == sf::Keyboard::Right) game.Move(Direction::Right);
+                                        if (event.key.code == sf::Keyboard::Up) game.Move(Direction::Up);
+                                        if (event.key.code == sf::Keyboard::Down) game.Move(Direction::Down);
+                                        // Новая игра
+                                        if (event.key.code == sf::Keyboard::F2)
+                                        {
+                                            game.Init();
+                                            move_counter = 100;
+                                        }
+                                    }
                                 }
+
+                                // Если счетчик ходов больше нуля, продолжаем перемешивать головоломку
+                                if (move_counter-- > 0) game.Move((Direction)(rand() % 4));
+
+                                // Выполняем необходимые действия по отрисовке
+                                window.clear();
+                                window.draw(game);
+                                window.display();
+
                             }
-                        }
-
-                        // Если счетчик ходов больше нуля, продолжаем перемешивать головоломку
-                        if (move_counter-- > 0) game.Move((Direction)(rand() % 4));
-
-                        // Выполняем необходимые действия по отрисовке
-                        window.clear();
-                        window.draw(game);
-                        window.display();
                     }
-
                 }
+
             }
-            
+
             if (event.type == sf::Event::MouseButtonPressed)
             {
                 if (frame == 0 && event.mouseButton.x > 0 && event.mouseButton.x < 126 && event.mouseButton.y>298 && event.mouseButton.y < 497)
@@ -151,12 +166,12 @@ int main(){
                     }
                 }
             }
-           
         }
         window.clear();
         window.draw(room);
         window.draw(Pet.TamaSprite());
         if (frame == 1) { window.draw(Table); }
+        window.draw(text);
         window.display();
         
     }
