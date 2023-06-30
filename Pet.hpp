@@ -15,6 +15,8 @@ private:
 	TypeOfPet TypeOfTam;
 	sf::Texture TextureTam;
 	sf::Sprite SpriteTam;
+	sf::Texture TextureBath;
+	sf::Sprite BathTam;
 public:
 	Tam(std::string name, int NumberOfType) : NameOfTam(name)
 	{
@@ -35,4 +37,23 @@ public:
 	~Tam() {}
 
 	sf::Sprite TamaSprite() { return SpriteTam;}
+	sf::Sprite BathSprite()
+	{
+		if (TypeOfTam == TypeOfPet::RACOON) 
+		{
+			TextureBath.loadFromFile("content/RacoonBath.png");
+			BathTam.setTexture(TextureBath);
+			BathTam.setTextureRect(sf::IntRect(0, 0, 420, 455));
+			BathTam.setPosition(96, 163);
+			return BathTam;
+		}
+		if (TypeOfTam == TypeOfPet::GOOSE)
+		{
+			TextureBath.loadFromFile("content/GooseBath.png");
+			BathTam.setTexture(TextureBath);
+			BathTam.setTextureRect(sf::IntRect(0, 0, 420, 455));
+			BathTam.setPosition(96, 163);
+			return BathTam;
+		}
+	}
 };
