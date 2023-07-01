@@ -3,8 +3,8 @@
 
 const int size = 4;	// Размер игрового поля в плашках
 const int ASize = size * size;	// Размер массива
-const int FSize = 1300;// Размер игрового поля в пикселях
-const int CSize = 325; // Размер одной плашки
+const int FSize = 750;// Размер игрового поля в пикселях
+const int CSize = 162; // Размер одной плашки
 
 enum class Direction { Left = 0, Right = 1, Up = 2, Down = 3 }; // определяет направление перемещения плашки
 

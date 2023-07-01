@@ -1,5 +1,4 @@
-﻿//НАСТИ
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
 #include <string>
 #include <chrono>
@@ -23,6 +22,7 @@ int main(){
     int leisure = 100;
     sf::Clock clock;
     sf::Clock sleepClock;
+    sf::Clock eatClock;
     sf::Clock TimeOfAnimation;
     int count = 0;
     // картинка потребностей
@@ -140,6 +140,7 @@ int main(){
     int cntsleep= 0;
     int cntsho = 0;
     int cntgame = 0;
+    int cnteat = 0;
 
     if (flagTxt == true) {
         std::string sleepStr = std::to_string(sleep);
@@ -181,6 +182,22 @@ int main(){
         Name.setString(Line1);
         Name.setPosition(0, 535);
         long time = clock.getElapsedTime().asSeconds();
+        if (sleep < 0)
+        {
+            sleep = 0;
+        }
+        if (hunger < 0)
+        {
+            hunger = 0;
+        }
+        if (hygiene < 0)
+        {
+            hygiene = 0;
+        }
+        if (leisure < 0)
+        {
+            leisure = 0;
+        }
         if (time % 1 == 0 && count!=time && IsThatDay == true) {
             count = time;
             sleep -= 1;
@@ -318,7 +335,7 @@ int main(){
                             ////////////
                             sf::Font font;
                             font.loadFromFile("content/ArialRegular.ttf");
-                            sf::RenderWindow window(sf::VideoMode(1000, 1000), "Game");
+                            sf::RenderWindow window(sf::VideoMode(700, 700), "Game");
                             // Создаем объект игры
                             Game game;
                             game.setPosition(50.f, 50.f);
@@ -499,11 +516,15 @@ int main(){
             else { IsFoodNearMouth = false; }
         }
         if (TamaEat == true) {
-            hunger += 25;
-            if (hunger > 100)
-            {
-                hunger = 100;
+            long EatTime = eatClock.getElapsedTime().asSeconds();
+            if (EatTime % 1 == 0 && cnteat != EatTime) {
+                hunger += 20;
+                cnteat = EatTime;
+                if (hunger > 100) {
+                    hunger = 100;
+                }
             }
+            std::cout << hunger << "\n";
         }
         if (frame == 2) {
             long ShowerTime = sleepClock.getElapsedTime().asSeconds();
