@@ -137,7 +137,9 @@ int main(){
     rectangle.setFillColor(sf::Color(255, 248, 220));
     rectangle.setPosition(0, 530);
     int cnt = 0;
-    int cntt = 0;
+    int cntsleep= 0;
+    int cntsho = 0;
+    int cntgame = 0;
 
     if (flagTxt == true) {
         std::string sleepStr = std::to_string(sleep);
@@ -343,6 +345,17 @@ int main(){
                                             move_counter = 100;
                                         }
                                     }
+                                    if (flagGame == true) {
+                                        long gameTime = sleepClock.getElapsedTime().asSeconds();
+                                        if (gameTime % 1 == 0 && cntgame != gameTime) {
+                                            leisure += 2;
+                                            cntgame = gameTime;
+                                            if (leisure > 100) {
+                                                leisure = 100;
+                                            }
+                                            std::cout << leisure << std::endl;
+                                        }
+                                    }
                                 }
 
                                 // Если счетчик ходов больше нуля, продолжаем перемешивать головоломку
@@ -353,6 +366,7 @@ int main(){
                                 window.draw(game);
                                 window.display();
 
+           
                             }
                     }
                 }
@@ -385,24 +399,13 @@ int main(){
         }
         if (IsThatDay == false) {
             long sleepTime = sleepClock.getElapsedTime().asSeconds();
-            if (sleepTime % 1 == 0 && cntt != sleepTime) {
+            if (sleepTime % 1 == 0 && cntsleep != sleepTime) {
                 sleep += 2;
-                cntt = sleepTime;
+                cntsleep = sleepTime;
                 if (sleep > 100) {
                     sleep = 100;
                 }
                 //std::cout << sleep << std::endl;
-            }
-        }
-        if (flagGame == true) {
-            long gameTime = sleepClock.getElapsedTime().asSeconds();
-            if (gameTime % 1 == 0 && cntt != gameTime) {
-                leisure += 2;
-                cntt = gameTime;
-                if (leisure > 100) {
-                    leisure = 100;
-                }
-                std::cout << leisure << std::endl;
             }
         }
         if (event.type == sf::Event::MouseButtonPressed)
@@ -490,6 +493,16 @@ int main(){
                 IsFoodNearMouth = true;
             }
             else { IsFoodNearMouth = false; }
+        }
+        if (frame == 2) {
+            long ShowerTime = sleepClock.getElapsedTime().asSeconds();
+            if (ShowerTime % 1 == 0 && cntsho != ShowerTime) {
+                hygiene += 2;
+                cntsho = ShowerTime;
+                if (hygiene > 100) {
+                    hygiene = 100;
+                }
+            }
         }
         window.clear();
         window.draw(room);
