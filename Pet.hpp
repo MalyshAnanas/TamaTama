@@ -43,17 +43,18 @@ public:
 		{
 			TextureBath.loadFromFile("content/RacoonBath.png");
 			BathTam.setTexture(TextureBath);
-			BathTam.setTextureRect(sf::IntRect(0, 0, 420, 455));
-			BathTam.setPosition(96, 163);
+			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
+			BathTam.setPosition(50, 83);
 			return BathTam;
 		}
 		if (TypeOfTam == TypeOfPet::GOOSE)
 		{
 			TextureBath.loadFromFile("content/GooseBath.png");
 			BathTam.setTexture(TextureBath);
-			BathTam.setTextureRect(sf::IntRect(0, 0, 420, 455));
-			BathTam.setPosition(96, 163);
+			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
+			BathTam.setPosition(50, 83);
 			return BathTam;
 		}
 	}
+
 };

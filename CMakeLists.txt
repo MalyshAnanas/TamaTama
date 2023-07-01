@@ -14,6 +14,7 @@ add_executable(project TamaTama.cpp
 			Game.cpp
 			Game.h
 			Pet.hpp
+			Information.hpp
 )
 
 target_link_libraries("project"
