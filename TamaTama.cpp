@@ -1,11 +1,14 @@
-﻿#include <iostream>
+﻿//НАСТИ
+#include <iostream>
 #include <fstream>
 #include <string>
+#include <chrono>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Game.h"
 #include "Pet.hpp"
 #include "Information.hpp"
-#include <chrono>
+#include "Food.hpp"
 
 std::string timePointToString(const std::chrono::system_clock::time_point& timePoint) {
     auto duration = timePoint.time_since_epoch();
@@ -20,6 +23,7 @@ int main(){
     int leisure = 100;
     sf::Clock clock;
     sf::Clock sleepClock;
+    sf::Clock TimeOfAnimation;
     int count = 0;
     // картинка потребностей
     sf::Texture textureOfSleep;
@@ -104,9 +108,21 @@ int main(){
     Table.setTexture(TextureOfTable);
     Table.setTextureRect(sf::IntRect(0, 0, 540, 720));
     Table.setPosition(11, 382);
+    Food Food1("content/Food1.png", 355, 225);
+    Food Food2("content/Food2.png", 425, 280);
+    Food Food3("content/Food3.png", 355, 280);
+    Food Food4("content/Food4.png", 425, 225);
     float frame = 0;
     bool flagGame = false;
     bool IsThatDay = true;
+    bool IsPetSleep = false;
+    bool IsTakeFood1 = false;
+    bool IsTakeFood2 = false;
+    bool IsTakeFood3 = false;
+    bool IsTakeFood4 = false;
+    bool IsFoodNearMouth = false;
+    bool TamaEat = false;
+    int CountOfEatAnim = 0;
 
     sf::Font fOnt;
     sf::Font NameFont;
@@ -150,7 +166,16 @@ int main(){
         std::cout << "requirement:" << sleep << std::endl << hunger << std::endl << hygiene << std::endl << leisure << std::endl;
     }
 
+    sf::Music music;
+    if (!music.openFromFile("content/music.ogg"))return -1;
+    music.setVolume(5.f);
+    music.play();
+    sf::SoundBuffer lamp; lamp.loadFromFile("content/lamp.ogg");
+    sf::Sound SoundOfLamp; SoundOfLamp.setBuffer(lamp);
+
+
     while (window.isOpen()){
+        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         Name.setString(Line1);
         Name.setPosition(0, 535);
         long time = clock.getElapsedTime().asSeconds();
@@ -234,6 +259,37 @@ int main(){
         }
         //
 
+        long TimeOfChange = TimeOfAnimation.getElapsedTime().asMicroseconds();
+        if (TimeOfChange > 200000)
+        {
+            if ((IsPetSleep == false || frame != 0) && IsFoodNearMouth == false && TamaEat == false)
+            {
+                Pet.ChangeTamaSprite();
+            }
+            else if (IsPetSleep == true && frame == 0)
+            {
+                Pet.ChangeTamaSprite(1);
+            }
+            else if (IsFoodNearMouth == true && frame == 1)
+            {
+                Pet.ChangeTamaSprite(2);
+            }
+            else if (TamaEat == true && frame == 1)
+            {
+                if (CountOfEatAnim < 8)
+                {
+                    Pet.ChangeTamaSprite(3);
+                    CountOfEatAnim++;
+                }
+                else
+                {
+                    TamaEat = false;
+                    CountOfEatAnim = 0;
+                }
+            }
+            TimeOfAnimation.restart();
+        }
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) window.close();
 
@@ -314,10 +370,14 @@ int main(){
                         {
                             room.setTextureRect(sf::IntRect(0, 720, 540, 720));
                             IsThatDay = false;
+                            IsPetSleep = true;
+                            SoundOfLamp.play();
                         }
                         else { 
                             room.setTextureRect(sf::IntRect(0, 0, 540, 720));
                             IsThatDay = true;
+                            IsPetSleep = false; 
+                            SoundOfLamp.play();
                         }
                     }
                 }
@@ -345,11 +405,104 @@ int main(){
                 std::cout << leisure << std::endl;
             }
         }
+        if (event.type == sf::Event::MouseButtonPressed)
+        {
+            if (event.key.code == sf::Mouse::Left)
+            {
+                if (Food1.FoodSprite().getGlobalBounds().contains(pixelPos.x, pixelPos.y))
+                {
+                    Food1.CalculatedX(pixelPos.x);
+                    Food1.CalculatedY(pixelPos.y);
+                    IsTakeFood1 = true;
+                }
+                if (Food2.FoodSprite().getGlobalBounds().contains(pixelPos.x, pixelPos.y))
+                {
+                    Food2.CalculatedX(pixelPos.x);
+                    Food2.CalculatedY(pixelPos.y);
+                    IsTakeFood2 = true;
+                }
+                if (Food3.FoodSprite().getGlobalBounds().contains(pixelPos.x, pixelPos.y))
+                {
+                    Food3.CalculatedX(pixelPos.x);
+                    Food3.CalculatedY(pixelPos.y);
+                    IsTakeFood3 = true;
+                }
+                if (Food4.FoodSprite().getGlobalBounds().contains(pixelPos.x, pixelPos.y))
+                {
+                    Food4.CalculatedX(pixelPos.x);
+                    Food4.CalculatedY(pixelPos.y);
+                    IsTakeFood4 = true;
+                }
+            }
+
+        }
+        if (event.type == sf::Event::MouseButtonReleased)
+        {
+            if (event.key.code == sf::Mouse::Left)
+            {
+                if (IsFoodNearMouth == true)
+                {
+                    TamaEat = true;
+                }
+                IsTakeFood1 = false;
+                Food1.ChangePosition(355, 225);
+                IsTakeFood2 = false;
+                Food2.ChangePosition(425, 280);
+                IsTakeFood3 = false;
+                Food3.ChangePosition(355, 280);
+                IsTakeFood4 = false;
+                Food4.ChangePosition(425, 225);
+                IsFoodNearMouth = false;
+            }
+        }
+        if (IsTakeFood1)
+        {
+            Food1.ChangePosition(pixelPos.x - Food1.ReturndX(), pixelPos.y - Food1.ReturndY());
+            if (Food1.FoodSprite().getPosition().x > 166 && Food1.FoodSprite().getPosition().x < 317 && Food1.FoodSprite().getPosition().y >215 && Food1.FoodSprite().getPosition().y < 344)
+            {
+                IsFoodNearMouth = true;
+            }
+            else { IsFoodNearMouth = false; }
+        }
+        if (IsTakeFood2)
+        {
+            Food2.ChangePosition(pixelPos.x - Food2.ReturndX(), pixelPos.y - Food2.ReturndY());
+            if (Food2.FoodSprite().getPosition().x > 166 && Food2.FoodSprite().getPosition().x < 317 && Food2.FoodSprite().getPosition().y >215 && Food2.FoodSprite().getPosition().y < 344)
+            {
+                IsFoodNearMouth = true;
+            }
+            else { IsFoodNearMouth = false; }
+        }
+        if (IsTakeFood3)
+        {
+            Food3.ChangePosition(pixelPos.x - Food3.ReturndX(), pixelPos.y - Food3.ReturndY());
+            if (Food3.FoodSprite().getPosition().x > 166 && Food3.FoodSprite().getPosition().x < 317 && Food3.FoodSprite().getPosition().y >215 && Food3.FoodSprite().getPosition().y < 344)
+            {
+                IsFoodNearMouth = true;
+            }
+            else { IsFoodNearMouth = false; }
+        }
+        if (IsTakeFood4)
+        {
+            Food4.ChangePosition(pixelPos.x - Food4.ReturndX(), pixelPos.y - Food4.ReturndY());
+            if (Food4.FoodSprite().getPosition().x > 166 && Food4.FoodSprite().getPosition().x < 317 && Food4.FoodSprite().getPosition().y >215 && Food4.FoodSprite().getPosition().y < 344)
+            {
+                IsFoodNearMouth = true;
+            }
+            else { IsFoodNearMouth = false; }
+        }
         window.clear();
         window.draw(room);
         if (frame!=2) { window.draw(Pet.TamaSprite());}
         if (frame==2) { window.draw(Pet.BathSprite()); }
-        if (frame == 1) { window.draw(Table); }
+        if (frame == 1)
+        {
+            window.draw(Table);
+            window.draw(Food1.FoodSprite());
+            window.draw(Food2.FoodSprite());
+            window.draw(Food3.FoodSprite());
+            window.draw(Food4.FoodSprite());
+        }
         window.draw(Sleep);
         window.draw(Hunger);
         window.draw(Hygiene);
