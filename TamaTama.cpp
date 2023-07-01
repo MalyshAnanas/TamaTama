@@ -264,6 +264,10 @@ int main(){
         long TimeOfChange = TimeOfAnimation.getElapsedTime().asMicroseconds();
         if (TimeOfChange > 200000)
         {
+            if (frame == 2)
+            {
+                Pet.ChangeBathSprite();
+            }
             if ((IsPetSleep == false || frame != 0) && IsFoodNearMouth == false && TamaEat == false)
             {
                 Pet.ChangeTamaSprite();
@@ -494,6 +498,13 @@ int main(){
             }
             else { IsFoodNearMouth = false; }
         }
+        if (TamaEat == true) {
+            hunger += 25;
+            if (hunger > 100)
+            {
+                hunger = 100;
+            }
+        }
         if (frame == 2) {
             long ShowerTime = sleepClock.getElapsedTime().asSeconds();
             if (ShowerTime % 1 == 0 && cntsho != ShowerTime) {
@@ -507,7 +518,7 @@ int main(){
         window.clear();
         window.draw(room);
         if (frame!=2) { window.draw(Pet.TamaSprite());}
-        if (frame==2) { window.draw(Pet.BathSprite()); }
+        if (frame == 2) { window.draw(Pet.BathSpite()); }
         if (frame == 1)
         {
             window.draw(Table);

@@ -19,6 +19,7 @@ private:
 	sf::Sprite BathTam;
 	int AnimateCount = 0;
 	int AnimateCount1 = 0;
+	int BathAnimateCount = 0;
 public:
 	Tam(std::string name, int NumberOfType) : NameOfTam(name)
 	{
@@ -26,11 +27,19 @@ public:
 		{
 			TypeOfTam = TypeOfPet::RACOON;
 			TextureTam.loadFromFile("content/Racoon.png");
+			TextureBath.loadFromFile("content/RacoonBath.png");
+			BathTam.setTexture(TextureBath);
+			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
+			BathTam.setPosition(50, 83);
 		}
 		else if (NumberOfType == 2)
 		{
 			TypeOfTam = TypeOfPet::GOOSE;
 			TextureTam.loadFromFile("content/Goose.png");
+			TextureBath.loadFromFile("content/GooseBath.png");
+			BathTam.setTexture(TextureBath);
+			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
+			BathTam.setPosition(50, 83);
 		}
 		SpriteTam.setTexture(TextureTam);
 		SpriteTam.setTextureRect(sf::IntRect(0, 0, 256, 350));
@@ -38,26 +47,8 @@ public:
 	}
 	~Tam() {}
 
-	sf::Sprite TamaSprite() { return SpriteTam;}
-	sf::Sprite BathSprite()
-	{
-		if (TypeOfTam == TypeOfPet::RACOON) 
-		{
-			TextureBath.loadFromFile("content/RacoonBath.png");
-			BathTam.setTexture(TextureBath);
-			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
-			BathTam.setPosition(50, 83);
-			return BathTam;
-		}
-		if (TypeOfTam == TypeOfPet::GOOSE)
-		{
-			TextureBath.loadFromFile("content/GooseBath.png");
-			BathTam.setTexture(TextureBath);
-			BathTam.setTextureRect(sf::IntRect(420, 0, 420, 455));
-			BathTam.setPosition(50, 83);
-			return BathTam;
-		}
-	}
+	sf::Sprite TamaSprite() { return SpriteTam; }
+	sf::Sprite BathSpite() { return BathTam; }
 	void ChangeTamaSprite(int Code = 0)
 	{
 		if (Code == 0)
@@ -239,6 +230,18 @@ public:
 					AnimateCount == 0;
 				}
 			}
+		}
+	}
+	void ChangeBathSprite()
+	{
+		if (BathAnimateCount < 4)
+		{
+			BathTam.setTextureRect(sf::IntRect(420 * BathAnimateCount, 0, 420, 455));
+			BathAnimateCount += 1;
+		}
+		if (BathAnimateCount == 4)
+		{
+			BathAnimateCount = 0;
 		}
 	}
 };
