@@ -15,6 +15,7 @@ add_executable(project TamaTama.cpp
 			Game.h
 			Pet.hpp
 			Information.hpp
+			Food.hpp
 )
 
 target_link_libraries("project"
@@ -37,4 +38,5 @@ target_link_libraries("project"
         vorbis
         ogg)
 
+file(COPY "OpenAL32.dll" DESTINATION "/")
 file(COPY "content" DESTINATION "/")
